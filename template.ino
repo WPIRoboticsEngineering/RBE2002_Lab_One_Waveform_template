@@ -28,7 +28,7 @@ double increment50Hz = increment / (frequencyTarget/frequencyTarget2);
 hw_timer_t *timer = NULL;
 portMUX_TYPE DRAM_ATTR timerMux = portMUX_INITIALIZER_UNLOCKED;
 TaskHandle_t complexHandlerTask;
-
+int oneVoltInAdc = (int)(255.0*(1.0/3.3));
 
 void runDDS() {
 	interruptCounter1kHz += increment;
@@ -39,8 +39,8 @@ void runDDS() {
 	if (interruptCounter50Hz >= 2 * PI) {
 		interruptCounter50Hz = 0;
 	}
-	sinComp = (126.0  * sin(interruptCounter1kHz)) + 128.0 ;
-	sinComp50Hz = (126.0 * sin(interruptCounter50Hz)) + 128.0;
+	sinComp = (oneVoltInAdc * sin(interruptCounter1kHz)) + oneVoltInAdc+1 ;
+	sinComp50Hz = (oneVoltInAdc * sin(interruptCounter50Hz)) + oneVoltInAdc+1;
 	analogWrite(26, (uint8_t) ( sinComp));
 	analogWrite(25, (uint8_t) (sinComp50Hz ));
 }
